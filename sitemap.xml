@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://google.com/schemas/sitemap-image/1.1">
+
+   <url>
+      
+      <loc>https://weberlin-design.de/index.html</loc>
+      
+      <lastmod>2018-16-04</lastmod>
+
+      <changefreq>monthly</changefreq>
+      
+      <priority>1.00</priority>
+      
+   </url>
+   
+   <url>
+      
+      <loc>https://weberlin-design.de/data-privacy-statement.html</loc>
+      
+      <lastmod>2018-16-04</lastmod>
+
+      <changefreq>monthly</changefreq>
+      
+      <priority>0.80</priority>
+      
+   </url>
+   
+   <url>
+      
+      <loc>https://weberlin-design.de/impressum.html</loc>
+      
+      <lastmod>2018-16-04</lastmod>
+
+      <changefreq>monthly</changefreq>
+      
+      <priority>0.80</priority>
+      
+   </url>
+   
+</urlset>

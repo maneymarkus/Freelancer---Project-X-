@@ -1,0 +1,56 @@
+h1 {
+	font-size: 3em;
+	margin: 0;
+	padding-top: 10%;
+	margin-bottom: 2em;
+	width: 100%;
+	text-align: center;
+}
+
+section {
+	text-align: left;
+}
+
+main > p {
+	margin: 3em 0;
+	text-align: center;
+	font-size: 1.5em;
+}
+
+main h2 {
+	margin-top: 0;
+	line-height: 1.2;
+	padding-bottom: 0.3em;
+}
+
+@media screen and (min-width: 600px) {
+	h1 {
+		font-size: 4em;
+	}
+	
+	main h2 {
+		font-size: 2em;
+	}
+}
+
+@media screen and (min-width: 960px) {
+	h1 {
+		margin-bottom: 1em;
+	}
+	
+	section {
+		margin-top: 1em;
+		margin-bottom: 1em;
+	}
+}
+
+@media screen and (min-width: 1200px) {
+	main {
+		margin: 0 auto;
+		width: 1200px;
+	}
+}
+
+@media screen and (min-width: 1500px) {
+	
+}

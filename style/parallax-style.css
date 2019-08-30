@@ -1,0 +1,220 @@
+* { 
+	box-sizing: border-box;
+	font-family: "Ubuntu", sans-serif;
+}
+
+html {
+	font-size: 0.7em;
+	height: 100%;
+	max-width: 100vw;
+	overflow: hidden;
+	background-color: black;
+}
+
+body {
+	height: 100%;
+	max-width: 100vw;
+	position: relative;
+	overflow-x: hidden;
+	overflow-y: auto;
+	perspective: 1000px;
+}
+
+.wrapper {
+	height: 100%;
+	left: 0;
+	perspective: 1000px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	position: relative;
+	backface-visibility: hidden;
+	-webkit-transition: left 1s;
+	-moz-transition: left 1s;
+	-ms-transition: left 1s;
+	-o-transition: left 1s;
+	transition: left 1s;
+}
+
+#above-fold {
+	width: 100%;
+	height: 100%;
+	background-image: url('../images/geometric-3037169_1920.png');
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-color: lightblue;
+	background-position: 50% 50%;
+	position: relative;
+	z-index: 100;
+	transition: transform 0.8s 0s;
+	text-align: center;
+}
+
+#above-fold.away {
+	transform: translateX(100%);
+}
+
+#above-fold h1 {
+	font-size: 5em;
+	margin-top: 0;
+	padding-top: 0.5em;
+	text-align: center;
+}
+
+#above-fold .cool {
+	background-image: url('../images/responsive_micro.png');
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	position: absolute;
+	top: 25%;
+	right: 25%;
+	left: 25%;
+	bottom: 15%;
+}
+
+.nav {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: -100%;
+	z-index: -1;
+	background-color: darkslategrey;
+	transform: rotateY(-50deg);
+	-webkit-transition: 1s;
+	-moz-transition: 1s;
+	-ms-transition: 1s;
+	-o-transition: 1s;
+	transition: 1s;
+	transform-origin: center right;
+}
+
+.nav.open {
+	left: 0;
+	transform: rotateY(0deg);
+}
+
+.nav.open ~ .wrapper {
+	left: 100%;
+}
+
+.mbutton {
+	position: fixed;
+	left: 50px;
+	top: 50px;
+	background-color: black;
+	color: white;
+	font-size: bold;
+	z-index: 1000000;
+	width: 100px;
+	height: 100px;
+}
+
+.p-group {
+	margin-top: 15em;
+	position: relative;
+	height: 50vh;
+	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	-ms-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+}
+
+.p-layer {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	-ms-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+}
+
+.p-layer-back {
+	-webkit-transform: translateZ(0);
+	-moz-transform: translateZ(0);
+	-ms-transform: translateZ(0);
+	-o-transform: translateZ(0);
+	transform: translateZ(0);
+}
+
+.p-layer-front {
+	-webkit-transform: translateZ(-1000px) scale(2); /* To compute the right scaling factor use: 2 + (translateZ * -1) / perspective */
+	-moz-transform: translateZ(-1000px) scale(2);
+	-ms-transform: translateZ(-1000px) scale(2);
+	-o-transform: translateZ(-1000px) scale(2);
+	transform: translateZ(-1000px) scale(2);
+}
+
+.p-group h1 {
+	text-align: center;
+	width: 100%;
+
+}
+
+@media screen and (min-width: 600px) {
+	
+	html {
+		font-size: 0.8em;
+	}
+
+	#above-fold .cool {
+		background-image: url('../images/responsive_small.png');
+	}
+}
+
+@media screen and (min-width: 960px) {
+	html {
+		font-size: 1em;
+		background-color: white;
+	}
+	
+	#above-fold {
+		background-attachment: fixed;
+	}
+	
+	#above-fold .cool {
+		background-image: url('../images/responsive.png');
+	}
+	
+}
+
+@media screen and (min-width: 1200px) {
+	html {
+		font-size: 1em;
+	}
+}
+
+@media screen and (min-width: 1500px) {
+	
+}
+
+@keyframes animation1 {
+	0% {
+		bottom: 0px;
+	}
+	
+	50% {
+		bottom: 25px;
+	}
+	
+	/*
+	
+	35% {
+		bottom: 50px;
+		transform: rotate(20deg);
+	}
+	
+	65% {
+		bottom: 50px;
+		transform: rotate(-40deg);
+	}
+	
+	*/
+	
+	100% {
+		bottom: 0px;
+	}
+}

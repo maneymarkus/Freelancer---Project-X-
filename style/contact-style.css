@@ -1,0 +1,150 @@
+main {
+	margin: 0 auto;
+}
+
+section#dynamic {
+	padding: 0;
+	margin-top: 0;
+	padding-top: 5%;
+}
+
+#dynamic p {
+	padding: 1em 3em;
+	font-size: 1.3em;
+	margin-bottom: 5%;
+}
+
+#dynamic p.fine {
+	background-color: rgba(0, 255, 0, 0.3);
+	border: 2px solid white;
+	border-radius: 3px;
+}
+
+#dynamic p.error {
+	background-color: rgba(255, 0, 0, 0.3);
+	border-radius: 3px;
+}
+
+#whats-next {
+	width: 100%;
+	background-color: #b2ffb3;
+	text-align: center;
+	padding: 0;
+	box-shadow: 2px 2px 8px black inset;
+}
+
+#whats-next h2:after {
+	display: none;
+}
+
+#whats-next .left,
+#whats-next .right {
+	background-color: white;
+	border-radius: 50%;
+	box-shadow: 2px 2px 2px grey;
+	position: absolute;
+	top: 55%;
+	transform: translateY(-50%);
+	z-index: 3;
+	font-size: 5em;
+	transition: 0.3s ease;
+	height: 1em;
+	width: 1em;
+	padding: 0 10px;
+}
+
+#whats-next i {
+	color: #317C31;
+	transition: 0.3s ease;
+	transform: translateY(-50%);
+	position: relative;
+}
+
+.left i {
+	right: 5%;
+}
+
+.right i {
+	left: 5%;
+}
+
+#whats-next .left:hover,
+#whats-next .right:hover {
+	transform: translateY(-50%);
+	cursor: pointer;
+	background-color: #317C31;
+}
+
+#whats-next .left:hover i,
+#whats-next .right:hover i {
+	transform: translateY(-50%);
+	color: white;
+}
+
+#whats-next .left {
+	left: -15%;
+}
+
+#whats-next .right {
+	right: -15%;
+}
+
+#whats-next .gallery {
+	width: 75%;
+	margin: 3em auto;
+	position: relative;
+}
+
+#whats-next .gallery .wrapper {
+	text-align: left;
+	position: relative;
+	overflow-x: hidden;
+	white-space: nowrap;
+}
+
+#whats-next .wrapper div {
+	width: 100%;
+	display: inline-block;
+	text-align: center;
+	box-sizing: margin-box;
+	margin-right: 2%;
+	padding: 2em 1em;
+	background-color: white;
+	*zoom: 1; /* clearfix-hack for IE 6/7 */
+	transition: 0.5s ease;
+}
+
+#whats-next .wrapper .drag {
+	transition: none;
+}
+
+#whats-next .wrapper div p {
+	white-space: normal;
+}
+
+footer {
+	margin-top: 0;
+}
+
+@media screen and (min-width: 960px) {
+	#whats-next .gallery {
+		width: 70%;
+	}
+	
+	#whats-next .wrapper div {
+		padding: 2em 3em;
+	}
+	
+	nav a:hover {
+		padding-left: 0;
+	}
+}
+
+@media screen and (min-width: 1200px) {
+	#whats-next .gallery {
+		width: 830px;
+	}
+}
+
+@media screen and (min-width: 1500px) {
+}
