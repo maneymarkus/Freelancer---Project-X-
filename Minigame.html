@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Minigame</title>
+
+    <script src="script/minigame.js" type="application/javascript" defer></script>
+
+    <style>
+
+        #canvas {
+            margin: -250px 0 0 -250px;
+            top: 50%;
+            left: 50%;
+            position: absolute;
+            border-radius: 3px;
+            box-shadow: 0px 0px 10px black inset;
+        }
+
+        #stats {
+            color: grey;
+            text-shadow: 1px 1px 5px black;
+            position: absolute;
+            font-size: 2rem;
+            z-index: 1000;
+            display: inline-block;
+            top: 0;
+            left: 0;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <canvas id="canvas" width="500px" height="500px"></canvas>
+    <span id="stats">0</span>
+
+</body>
+</html>
