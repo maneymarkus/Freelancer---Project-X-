@@ -5,67 +5,69 @@
 }
 
 body .hide {
-	display: none;
+    display: none;
 }
 
 .loading-container {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	background-color: transparent;
-	opacity: 1;
-	visibility: visible;
-	transition: 1s ease;
-	z-index: 1000000000000;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    opacity: 1;
+    visibility: visible;
+    transition: 1s ease;
+    z-index: 1000000000000;
 }
 
 .loading-container.fade-out {
-	visibility:hidden;
-	opacity: 0;
+    visibility:hidden;
+    opacity: 0;
 }
 
 .loading-container p {
-	text-align: center;
-	font-size: 3rem;
-	margin-top: 15vh;
-	position: absolute;
-	width: 100%;
+    text-align: center;
+    font-size: 3rem;
+    margin-top: 15vh;
+    position: absolute;
+    width: 100%;
 }
 
 .loading-container > div {
-	height: 100%;
-	width: 100%;
-	position: relative;
+    height: 100%;
+    width: 100%;
+    position: relative;
 }
 
 .loading-container .loader {
-	width: 25rem;
-	height: 25rem;
-	border: 10px solid transparent;
-	border-top: 10px solid #05a0ff;
-	position: absolute;
-	display: block;
-	margin: 0;
-	left: 50%;
-	top: 50%;
-	border-radius: 50%;
-	animation: spinning 1s linear 0s infinite forwards;
-	transform: translate(-50%, -50%);
+    width: 50vmin;
+    height: 50vmin;
+	max-width: 25rem;
+	max-height: 25rem;
+    border: 10px solid transparent;
+    border-top: 10px solid #05a0ff;
+    position: absolute;
+    display: block;
+    margin: 0;
+    left: 50%;
+    top: 60%;
+    border-radius: 50%;
+    animation: spinning 1s linear 0s infinite forwards;
+    transform: translateX(-50%);
 }
 
 @keyframes spinning {
-	from {
-		transform: translate(-50%, -50%) rotate(0deg);
-	}
-	25% {
-		transform: translate(-50%, -50%) rotate(20deg);
-	}
-	75% {
-		transform: translate(-50%, -50%) rotate(340deg);
-	}
-	to {
-		transform: translate(-50%, -50%) rotate(360deg);
-	}
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    25% {
+        transform: translate(-50%, -50%) rotate(20deg);
+    }
+    75% {
+        transform: translate(-50%, -50%) rotate(340deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
 }
 
 * {
@@ -74,7 +76,7 @@ body .hide {
 }
 
 html {
-	font-size: 0.5em;
+	font-size: 0.6em;
 	height: 100%;
 	width: 100%;
 	overflow: hidden;
@@ -99,6 +101,7 @@ body {
 }
 
 main {
+	transform-style: preserve-3d;
 	background-color: white;
 	min-height: 100%;
 	width: 100%;
@@ -123,6 +126,7 @@ main {
 	margin-top: 0;
 	padding-top: 15vh;
 	text-align: center;
+    text-shadow: 2px 2px 4px white, 5px 5px 10px black;
 }
 
 #above-fold .cool {
@@ -135,6 +139,23 @@ main {
 	right: 25%;
 	left: 25%;
 	bottom: 15%;
+    z-index: -1;
+}
+
+#above-fold p {
+    position: absolute;
+    width: 75%;
+	left: 50%;
+	transform: translateX(-50%);
+	background: rgba(0, 0, 0, 0.75);
+    text-align: center;
+    bottom: 6rem;
+    font-size: 2rem;
+	color: white;
+	padding: 1rem 3rem;
+	border-radius: 5px 5px 100px 100px;
+	text-shadow: 1px 1px 2px #b2b2b2;
+    line-height: 1.5;
 }
 
 #content-below {
@@ -403,7 +424,7 @@ header.open ~ .wrapper {
 	width: 5em;
 	height: 5em;
     z-index: 10000;
-	font-size: 1.7rem;
+	font-size: 1.5rem;
 	border-radius: 50%;
 	background-color: #59B5E0;
 	box-shadow: 1px 2px 4px grey;
@@ -415,7 +436,7 @@ header.open ~ .wrapper {
 	cursor: pointer;
 	box-shadow: 2px 4px 5px grey;
 	transform: translateY(-3px);
-	
+
 }
 
 .cookie-div {
@@ -574,15 +595,15 @@ footer p {
 }
 
 @media screen and (min-width: 600px) {
-	
+
 	html {
-		font-size: 0.6em;
+		font-size: 0.7em;
 	}
-	
+
 	nav ul {
 		font-size: 4.5em;
 	}
-	
+
 	#above-fold .cool {
 		background-image: url('../images/responsive_small.png');
 	}
@@ -593,7 +614,7 @@ footer p {
 		font-size: 0.7em;
 		background-color: white;
 	}
-	
+
 	#above-fold {
 		background-attachment: fixed;
 	}
@@ -601,26 +622,26 @@ footer p {
 	#above-fold h1 {
 		padding-top: 10vh;
 	}
-	
+
 	#above-fold .cool {
 		background-image: url('../images/responsive.png');
 	}
 
 	#back-to-top {
-		font-size: 1.2rem;
+		font-size: 1.3rem;
 	}
-	
+
 	header {
 		height: auto;
 		max-height: 80px;
 		width: 100%;
 		perspective: none;
-		position: relative;
+		position: sticky;
 		top: 0;
 		left: 0;
 		z-index: 10000;
 	}
-	
+
 	nav {
 		width: 100%;
 		height: auto;
@@ -644,7 +665,7 @@ footer p {
 	nav.bright ul li.view a {
 		color: black;
 	}
-	
+
 	nav .onpage {
 		display: block;
 		width: 90%;
@@ -653,10 +674,14 @@ footer p {
 		position: relative;
 		margin: 0 auto;
 	}
-	
+
 	nav ul {
 		font-size: 1.5rem;
 		display: block;
+		position: absolute;
+		right: 0;
+		top: 50%;
+		transform: translateY(-50%);
 		padding: 0;
 		padding-top: 0.5%;
 		background-color: transparent;
@@ -665,7 +690,7 @@ footer p {
 		line-height: 2;
 		width: 75%;
 	}
-	
+
 	nav .logo-div {
 		display: block;
 		position: relative;
@@ -674,13 +699,13 @@ footer p {
 		top: 0;
 		margin-left: auto;
 	}
-	
+
 	nav .logo-div img {
 		width: 5vw;
 		max-width: 65px;
 		height: auto;
 	}
-	
+
 	nav ul li {
 		margin: 0;
 		position: relative;
@@ -699,16 +724,16 @@ footer p {
 	#main-nav.bright ul li:hover a {
 		color: #3f3d3d;
 	}
-	
+
 	#main-nav ul li a {
 		position: relative;
 		display: block;
 		width: 100%;
 		padding: 3% 0;
-		color: #DDDDDD;
+		color: white;
 		transition: 0.2s ease-out;
 	}
-	
+
 	#main-nav ul li.view a {
 		color: white;
 	}
@@ -740,7 +765,7 @@ footer p {
 		width: 100%;
 		transform: translateX(0) rotateZ(0deg) scale(1, 1);
 	}
-	
+
 	nav a:active {
 		border: none;
 		outline: none;
@@ -757,24 +782,23 @@ footer p {
 	nav ul li:focus a:before{
 		display: none;
 	}
-	
+
 	nav ul li:hover a,
 	nav ul li:focus a {
 		color: white;
 	}
-	
+
 	header.scroll-nav {
-		position: sticky;
 		top: 0;
 		margin-top: 0;
 		left: 0;
 		box-shadow: 0px 4px 8px -5px black;
 	}
-	
+
 	.menu-button {
 		display: none;
 	}
-	
+
 	main {
 		transform: none;
 	}
@@ -785,11 +809,11 @@ footer p {
 		position: relative;
 		text-align: center;
 	}
-	
+
 	section h2 {
 		text-align: center;
 	}
-	
+
 	section h2:after {
 		display: none;
 	}
@@ -808,11 +832,15 @@ footer p {
 	html {
 		font-size: 0.9em;
 	}
-	
+
 	nav ul {
 		font-size: 1.5rem;
 	}
-	
+
+	.cookie-div {
+		font-size: 1.5rem;
+	}
+
 }
 
 @media screen and (min-width: 1500px) {
@@ -830,25 +858,25 @@ footer p {
 	0% {
 		bottom: 0px;
 	}
-	
+
 	50% {
 		bottom: 25px;
 	}
-	
+
 	/*
-	
+
 	35% {
 		bottom: 50px;
 		transform: rotate(20deg);
 	}
-	
+
 	65% {
 		bottom: 50px;
 		transform: rotate(-40deg);
 	}
-	
+
 	*/
-	
+
 	100% {
 		bottom: 0px;
 	}

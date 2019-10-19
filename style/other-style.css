@@ -1,5 +1,5 @@
 h1 {
-	font-size: 3em;
+	font-size: 5rem;
 	margin: 0;
 	padding-top: 10%;
 	margin-bottom: 2em;
@@ -8,25 +8,29 @@ h1 {
 }
 
 section {
+	font-size: 1.5rem;
 	text-align: left;
 }
 
 main > p {
-	margin: 3em 0;
+	margin: 3rem 0 0 0;
+	padding-bottom: 5rem;
 	text-align: center;
 	font-size: 1.5em;
 }
 
 main h2 {
+	font-size: 3rem;
 	margin-top: 0;
 	line-height: 1.2;
 	padding-bottom: 0.3em;
 }
 
+footer {
+	margin-top: 0;
+}
+
 @media screen and (min-width: 600px) {
-	h1 {
-		font-size: 4em;
-	}
 	
 	main h2 {
 		font-size: 2em;

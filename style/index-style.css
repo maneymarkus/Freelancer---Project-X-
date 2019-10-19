@@ -52,7 +52,7 @@
 	position: relative;
     padding: 0;
     margin: 350px auto;
-    background-color: #e6e6e6;
+    background-color: rgba(255, 172, 0, 0.4);
 	overflow: hidden;
 	transition: 0.5s ease;
 	border: 1px solid #909090;
@@ -86,11 +86,13 @@
 }
 
 #mouse-action h2 {
-	width: 33.333%;
+	display: inline-block;
+	left: 3rem;
 	top: 0;
 	text-align: center;
 	position: absolute;
 	transition: 0.5s ease;
+	z-index: 1000;
 }
 
 #mouse-action h2 span {
@@ -99,6 +101,7 @@
 }
 
 #mouse-action.clicked h2 {
+	left: 0;
 	width: 100%;
 }
 
@@ -112,7 +115,18 @@
 	top: -200px;
 	left: 0;
 	transition: 0.5s ease;
-	box-shadow: 0px 0px 10px inset black;
+	box-shadow: 0px 0px 20px 5px inset #bebebe;
+}
+
+#mouse-action .playground #stats {
+	color: grey;
+	text-shadow: 1px 1px 5px black;
+	position: absolute;
+	font-size: 2rem;
+	z-index: 1000;
+	display: none;
+	top: 0;
+	left: 0;
 }
 
 #mouse-action.clicked .playground {
@@ -128,7 +142,7 @@
 }
 
 #mouse-action.clicked .switch {
-	bottom: 10px;
+	bottom: 0px;
 }
 
 #mouse-action .switch label {
@@ -212,7 +226,8 @@
 	padding: 3rem;
 	font-size: 2rem;
 	width: 50%;
-	height: 50%;
+	max-height: 80vh;
+	overflow: auto;
 	background-color: #ffba44;
 	border-radius: 5px;
 	margin: 0 auto;
@@ -230,12 +245,11 @@
 }
 
 .modal-window .close {
-	display: inline-block;
 	width: 30px;
 	height: 30px;
-	position: absolute;
-	top: 1rem;
-	right: 1rem;
+	position: sticky;
+	top: 0rem;
+	left: 100%;
 }
 
 .modal-window .close:hover {
@@ -521,27 +535,45 @@ hr {
 	position: relative;
 	height: 50vh;
 	z-index: 0;
-	overflow: hidden;
+	font-size: 1.5rem;
+	transform-style: preserve-3d;
 }
 
 #parallax h3 {
 	text-align: center;
 	width: 100%;
 	font-size: 3rem;
+	position: relative;
+}
+
+#parallax h3 span {
+	font-weight: normal;
+	font-size: 3rem;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+#parallax p {
+	line-height: 1.5;
+	padding: 0 2rem;
+}
+
+.p-group {
+	transform-style: preserve-3d;
 }
 
 .p-layer {
 	position: absolute;
+	margin: 6rem auto;
 	top: 0;
 	left: 0;
-	bottom: 0;
 	right: 0;
-	margin: 5rem auto;
 }
 
 .p-layer-back {
-	width: 75%;
-	height: 300px;
+	width: 95%;
+	max-width: 1000px;
 	transform: translateZ(400px) scale(0.5); /* To compute the right scaling factor use: 1 + (translateZ * -1) / perspective */
 	background-color: #FFB872;
 	box-shadow: 0px 0px 5px 3px #aeaeae;
@@ -652,7 +684,7 @@ hr {
 	margin-left: -100px;
 	transition: 0.5s ease;
 }
- 
+
 .hex2:hover .info {
 	left: 50%;
 }
@@ -982,41 +1014,41 @@ footer {
 }
 
 @media screen and (min-width: 600px) {
-	
+
 	#templates {
 		font-size: 1.2em;
 	}
-	
+
 }
 
 @media screen and (min-width: 960px) {
-	
+
 	body section#qualities {
 		top: 0;
 		margin-top: 3rem;
 	}
-	
+
 	#services {
 		font-size: 1em;
 	}
-	
+
 	#about-me {
 		text-align: center;
 		width: 90%;
 		font-size: 1em;
 	}
-	
+
 	#references {
 		font-size: 1.3rem;
 		width: 100%;
 		text-align: center;
 	}
-	
+
 	#references .swipe-hint {
 		display: none;
 		font-size: 0.5em;
 	}
-	
+
 	#references .outer {
 		position: relative;
 		width: 60%;
@@ -1025,15 +1057,15 @@ footer {
 		overflow: hidden;
 		display: inline-block;
 	}
-	
+
 	#references.in-view .outer .inner img {
 		animation: none;
 	}
-	
+
 	#references .draggable {
 		cursor: default;
 	}
-	
+
 	#references .outer:last-child {
 		display: inline-block;
 	}
@@ -1171,7 +1203,7 @@ footer {
 		color: white;
 		transform: translateY(150%);
 	}
-	
+
 	.inner .overlay:hover {
 		cursor: pointer;
 	}
@@ -1179,17 +1211,17 @@ footer {
 	.inner:hover .overlay {
 		transform: translateY(-3%);
 	}
-	
+
 	#templates {
 		font-size: 0.7em;
 		width: 100%;
 		padding: 0 10%;
 	}
-	
+
 	#templates h2 {
 		text-align: center;
 	}
-	
+
 	#templates .container {
 		width: 90%;
 		margin: 5em auto;
@@ -1209,17 +1241,17 @@ footer {
 		float: left;
 	}
 
-	.contact .column-left div {
+	.contact .column-left > div {
 		width: 80%;
 	}
-	
+
 	.contact .textmessage {
 		float: right;
 	}
 }
 
 @media screen and (min-width: 1200px) {
-	
+
 	#qualities {
 		font-size: 0.8rem;
 		margin-top: 3%;
@@ -1233,13 +1265,17 @@ footer {
 		margin-bottom: 2%;
 		float: left;
 	}
-	
+
 	#qualities div div {
 		margin-right: 3%;
 	}
-	
+
 	#qualities h3 {
 		margin-top: 0;
+	}
+
+	#mouse-action.clicked .switch {
+		bottom: -10px;
 	}
 
 	#services {
@@ -1249,15 +1285,15 @@ footer {
 	#about-me {
 		font-size: 0.8rem;
 	}
-	
+
 	#templates {
 		font-size: 0.6em;
 	}
-	
+
 	#contact {
 		font-size: 1rem;
 	}
-	
+
 }
 
 @media screen and (min-width: 1500px) {
@@ -1289,62 +1325,62 @@ footer {
 	0% {
 		bottom: 0px;
 	}
-	
+
 	50% {
 		bottom: 25px;
 	}
-	
+
 	/*
-	
+
 	35% {
 		bottom: 50px;
 		transform: rotate(20deg);
 	}
-	
+
 	65% {
 		bottom: 50px;
 		transform: rotate(-40deg);
 	}
-	
+
 	*/
-	
+
 	100% {
 		bottom: 0px;
 	}
 }
 
 @keyframes referenceSwipe {
-	
+
 	0% {
 		trsnsform: translateX(0);
 	}
-	
+
 	30% {
 		transform: translateX(-100%);
 	}
-	
+
 	60% {
 		transform: translateX(100%);
 	}
-	
+
 	100% {
 		transform: translateX(0);
 	}
-	
+
 }
 
 @keyframes swipeImg {
-	
+
 	0% {
 		transform: translateX(0) rotate(0deg);
 	}
-	
+
 	50% {
 		transform: translateX(110%) rotate(10deg);
 	}
-	
+
 	100% {
 		transform: translateX(0%) rotate(0deg);
 	}
-	
+
 }

@@ -1,7 +1,10 @@
+// written by me
+
 function init(window, document, LoadingModule, undefined) {
 
 	window.setTimeout(function () {
-		LoadingModule.stopApi();
+		let loadingContainer = document.getElementsByClassName("loading-container")[0];
+		LoadingModule.stopApi(loadingContainer);
 	}, 300);
 
 	let header = document.getElementsByClassName("header")[0];
@@ -165,15 +168,18 @@ function init(window, document, LoadingModule, undefined) {
 					header.classList.remove("scroll-nav");
 				}
 			}
-			window.requestAnimationFrame(scrollFunc);
+			//window.requestAnimationFrame(scrollFunc);
 		}
 
-		scrollFunc();
+		//scrollFunc();
+
+		//window.setInterval(scrollFunc, 10);
+
+		wrapper.addEventListener("scroll", scrollFunc);
 
 		nav.addEventListener("click", function(e) {
 			e.preventDefault();
-			let ev = e || window.event;
-			let target = ev.target || window.target;
+			let target = e.target || window.target;
 			windowWidth = w.innerWidth || el.clientWidth || g.clientWidth;
 			let scrollVar = wrapper.scrollTop;
 			if (target.getAttribute("href") == null) {
@@ -302,17 +308,17 @@ function init(window, document, LoadingModule, undefined) {
 		}
 
 		function createParticles() {
-            for (let i = 0; i < 15; i++) {
-                let xPos = x + Math.floor(Math.random() * 100) - 50;
-                let yPos = y + Math.floor(Math.random() * 100) - 50;
-                if (Math.sqrt(Math.pow((xPos - x),2) + Math.pow((yPos - y), 2)) < 30) {
-                    createParticle(xPos, yPos);
-                }
-            }
-            particleReference = requestAnimationFrame(createParticles);
-        }
+			for (let i = 0; i < 15; i++) {
+				let xPos = x + Math.floor(Math.random() * 100) - 50;
+				let yPos = y + Math.floor(Math.random() * 100) - 50;
+				if (Math.sqrt(Math.pow((xPos - x),2) + Math.pow((yPos - y), 2)) < 30) {
+					createParticle(xPos, yPos);
+				}
+			}
+			particleReference = requestAnimationFrame(createParticles);
+		}
 
-        function startAnimation() {
+		function startAnimation() {
 			createParticles();
 			render();
 		}
@@ -324,8 +330,8 @@ function init(window, document, LoadingModule, undefined) {
 			particles = [];
 			x = mouseCanvas.width / 2;
 			y = mouseCanvas.height / 2;
-        	cancelAnimationFrame(animationReference);
-        	cancelAnimationFrame(particleReference);
+			cancelAnimationFrame(animationReference);
+			cancelAnimationFrame(particleReference);
 		}
 
 		return {
@@ -356,63 +362,463 @@ function init(window, document, LoadingModule, undefined) {
 
 	let CanvasModuleMinigame = (function(window, document, undefined) {
 
-		let mouseActionSec = document.getElementById("mouse-action");
-		let mouseCanvas = mouseActionSec.getElementsByTagName("canvas")[0];
+		let canvas = document.getElementById("mouse-canvas");
+		let stats = document.getElementById("stats");
 
 		let animationReference;
-		let ctx = mouseCanvas.getContext("2d");
+		let createFoodIntervalId;
+		let ctx = canvas.getContext("2d");
 		let colors = ["#717DFF", "#8FB0FF", "#449EFF", "#3C43FF", "#8F87FF"];
-		let x = mouseCanvas.width / 2;
-		let y = mouseCanvas.height / 2;
-		let player;
+		let foodColors = ["#ffee7b", "#ffb0fa", "#99ff90", "#ff5b67", "#7EAEFF"];
+		let x = canvas.width / 2;
+		let y = canvas.height / 2;
+		let user;
+		let enemy;
+		let foods = [];
+		let players = [];
+		let velocity = 15;
+		let maxVelocity = 3;
+		let minVelocity = 0.35;
+		//let startTime = new Date().getTime();
 
-		function Player(x, y, radius, color) {
+		function Player(x, y, vx, vy, radius, color) {
+
+			this.x = x;
+			this.y = y;
+			this.vx = vx;
+			this.vy = vy;
+			this.radius = radius;
+			this.color = color;
+		}
+
+		Player.prototype = {
+			grow : function(added) {
+				this.radius += added;
+			},
+
+			draw : function() {
+				ctx.beginPath();
+				ctx.arc(this.x, this.y, this.radius, 0, 7, false);
+				ctx.fillStyle = this.color;
+				ctx.fill();
+			},
+		};
+
+		function User(x, y, vx, vy, radius, color) {
+			Player.call(this, x, y, vx, vy, radius, color);
+
 			this.update = function() {
 
+				let threshold = this.radius * 0.25;
+
+				let normalVelocity = velocity / threshold;
+				let maxV = Math.min(maxVelocity, normalVelocity);
+
+				if (this.controls.up) {
+					this.vy -= 0.2;
+					if (this.vy < 0 && this.vy > (minVelocity * -1)) {
+						this.vy = minVelocity * -1;
+					}
+					if (this.vy <= maxV * -1) {
+						this.vy = maxV * -1;
+					}
+				}
+				if (this.controls.right) {
+					this.vx += 0.2;
+					if (this.vx > 0 && this.vx < minVelocity) {
+						this.vx = minVelocity;
+					}
+					if (this.vx >= maxV) {
+						this.vx = maxV;
+					}
+				}
+				if (this.controls.bottom) {
+					this.vy += 0.2;
+					if (this.vy > 0 && this.vy < minVelocity) {
+						this.vy = minVelocity;
+					}
+					if (this.vy >= maxV) {
+						this.vy = maxV;
+					}
+				}
+				if (this.controls.left) {
+					this.vx -= 0.2;
+					if (this.vx < 0 && this.vx > (minVelocity * -1)) {
+						this.vx = minVelocity * -1;
+					}
+					if (this.vx <= maxV * -1) {
+						this.vx = maxV * -1;
+					}
+				}
+				if (!this.controls.up && this.vy < 0) {
+					this.vy += 0.1;
+				}
+				if (!this.controls.right && this.vx > 0) {
+					this.vx -= 0.1;
+				}
+				if (!this.controls.bottom && this.vy > 0) {
+					this.vy -= 0.1;
+				}
+				if (!this.controls.left && this.vx < 0) {
+					this.vx += 0.1;
+				}
+				if ((this.x + 0.5 * this.radius >= canvas.width) && this.vx > 0) {
+					this.vx = 0;
+				} else if ((this.x - 0.5 * this.radius <= 0) && this.vx < 0) {
+					this.vx = 0;
+				}
+				if ((this.y + 0.5 * this.radius >= canvas.height) && this.vy > 0) {
+					this.vy = 0;
+				} else if ((this.y - 0.5 * this.radius <= 0) && this.vy < 0) {
+					this.vy = 0;
+				}
+				this.vx = Math.round(this.vx * 10) / 10;
+				this.vy = Math.round(this.vy * 10) / 10;
+				//console.log(this.vx + " : " + this.vy);
+				this.x += this.vx;
+				this.y += this.vy;
+				if (enemy) {
+					this.eat();
+				}
+				this.stats();
+			};
+
+			this.eat = function() {
+				let dist = Math.sqrt((Math.pow((enemy.x - this.x), 2) + Math.pow((enemy.y - this.y), 2)));
+				let difRad = (this.radius - enemy.radius);
+				if (dist < (this.radius - enemy.radius * 0.75) && difRad > 5) {
+					let player1Area = 3.1415 * Math.pow(enemy.radius, 2);
+					let player2Area = 3.1415 * Math.pow(this.radius, 2);
+					let mergedArea = player1Area + player2Area;
+					let newRadius = Math.sqrt(mergedArea/3.1415);
+					let growBy = newRadius - this.radius;
+					this.grow(growBy);
+					enemy = undefined;
+					window.setTimeout(function () {
+						enemy = createEnemy();
+					}, ((Math.random() * 5000) + 1000));
+				}
+			};
+
+			this.stats = function() {
+				stats.innerHTML = "" + Math.floor(this.radius * 4);
+			};
+
+			this.controls = {
+				up: false,
+				right: false,
+				bottom: false,
+				left: false
+			};
+
+		}
+
+		User.prototype = Object.create(Player.prototype, {
+
+		});
+		User.prototype.constructor = User;
+
+		function createUser(x, y) {
+			let color = colors[(Math.floor(Math.random() * 100)) % 5];
+			let radius = 18;
+			return new User(Math.floor(x), Math.floor(y), 0, 0, radius, color);
+		}
+
+		function Enemy(x, y, vx, vy, radius, color) {
+
+			Player.call(this, x, y, vx, vy, radius, color);
+
+			let newDestination = {
+				x,
+				y,
+			};
+
+			let waitingCounter = 0;
+
+			this.update = function() {
+				if (user) {
+					if ((user.radius - this.radius) > 5) {
+						let dist = Math.sqrt((Math.pow((user.x - this.x), 2) + Math.pow((user.y - this.y), 2)));
+						if (dist < (user.radius + this.radius + 5)) {
+							this.runAway(dist);
+						}
+					}
+				}
+				if (waitingCounter === 0) {
+					if (user) {
+						if (this.radius - 8 > user.radius) {
+							this.tryToEatUser();
+						} else {
+							if (foods.length > 0) {
+								this.searchForFood();
+							}
+						}
+					} else {
+						if (foods.length > 0) {
+							this.searchForFood();
+						}
+					}
+					waitingCounter = Math.round((Math.random() * 200));
+				}
+				waitingCounter -= 1;
+				this.go();
+				if (user) {
+					this.eat();
+				}
+			};
+
+			this.eat = function() {
+				let dist = Math.sqrt((Math.pow((user.x - this.x), 2) + Math.pow((user.y - this.y), 2)));
+				let difRad = (this.radius - user.radius);
+				if (dist < (this.radius - user.radius * 0.75) && difRad > 5) {
+					let player1Area = 3.1415 * Math.pow(user.radius, 2);
+					let player2Area = 3.1415 * Math.pow(this.radius, 2);
+					let mergedArea = player1Area + player2Area;
+					let newRadius = Math.sqrt(mergedArea / 3.1415);
+					let growBy = newRadius - this.radius;
+					this.grow(growBy);
+					user = undefined;
+					window.setTimeout(function () {
+						let ux = Math.floor((Math.random() * (canvas.width - 15)) + 15);
+						let uy = Math.floor((Math.random() * (canvas.height - 15)) + 15);
+						let dist = Math.sqrt((Math.pow((ux - this.x), 2) + (Math.pow((uy - this.y), 2))));
+						while (dist < 100) {
+							ux = Math.floor((Math.random() * (canvas.width - 15)) + 15);
+							uy = Math.floor((Math.random() * (canvas.height - 15)) + 15);
+							dist = Math.sqrt((Math.pow((ux - user.x), 2) + (Math.pow((uy - user.y), 2))));
+						}
+						user = createUser(ux, uy);
+					}, ((Math.random() * 5000) + 1000));
+				}
+			};
+
+			this.runAway = function(dist) {
+				let m = (this.y - user.y) / (this.x - user.x);
+				let b = this.y - m * this.x;
+				newDestination.y = m * (this.x + 10) + b;
+				newDestination.x = (newDestination.y - b) / m;
+				let newDist = Math.sqrt((Math.pow((newDestination.x - user.x), 2) + Math.pow((user.y - newDestination.y), 2)));
+				if (newDist < dist) {
+					newDestination.y = m * (this.x - 10) + b;
+					newDestination.x = (newDestination.y - b) / m;
+				}
+			};
+
+			this.go = function () {
+
+				let threshold = this.radius * 0.25;
+
+				let normalVelocity = velocity / threshold;
+				let maxV = Math.min(maxVelocity, normalVelocity);
+				let vel = Math.max(maxV, minVelocity);
+
+				this.vx = 0;
+				this.vy = 0;
+				if (Math.sqrt(Math.pow((this.x - newDestination.x), 2)) > 5) {
+					if (newDestination.x - this.x >= 0) {
+						this.vx = vel;
+					} else {
+						this.vx = vel * -1;
+					}
+				}
+				if (Math.sqrt(Math.pow((this.y - newDestination.y), 2)) > 5) {
+					if (newDestination.y - this.y >= 0) {
+						this.vy = vel;
+					} else {
+						this.vy = vel * -1;
+					}
+				}
+				if ((this.x + 0.5 * this.radius >= canvas.width) && this.vx > 0) {
+					this.vx = 0;
+				} else if ((this.x - 0.5 * this.radius <= 0) && this.vx < 0) {
+					this.vx = 0;
+				}
+				if ((this.y + 0.5 * this.radius >= canvas.height) && this.vy > 0) {
+					this.vy = 0;
+				} else if ((this.y - 0.5 * this.radius <= 0) && this.vy < 0) {
+					this.vy = 0;
+				}
+				this.x += this.vx;
+				this.y += this.vy;
+			};
+
+			this.searchForFood = function() {
+				let minDist = Math.sqrt((Math.pow((this.x - foods[0].x), 2) + Math.pow((this.y - foods[0].y), 2)));
+				newDestination = {
+					x : foods[0].x,
+					y : foods[0].y,
+				};
+				for (let i = 1; i < foods.length; i++) {
+					let dist = Math.sqrt((Math.pow((this.x - foods[i].x), 2) + Math.pow((this.y - foods[i].y), 2)));
+					if (dist < minDist) {
+						minDist = dist;
+						newDestination = {
+							x : foods[i].x,
+							y : foods[i].y,
+						}
+					}
+				}
+			};
+
+			this.tryToEatUser = function() {
+				newDestination = {
+					x : user.x,
+					y : user.y,
+				};
+			};
+		}
+
+		Enemy.prototype = Object.create(Player.prototype, {
+
+		});
+		Enemy.prototype.constructor = Enemy;
+
+		function createEnemy() {
+			let color = colors[(Math.floor(Math.random() * 100)) % 5];
+			while (color === user.color) {
+				color = colors[(Math.floor(Math.random() * 100)) % 5];
+			}
+			let radius = 15;
+			let ex = Math.floor((Math.random() * (canvas.width - 15)) + 15);
+			let ey = Math.floor((Math.random() * (canvas.height - 15)) + 15);
+			let dist = Math.sqrt((Math.pow((ex - user.x), 2) + (Math.pow((ey - user.y), 2))));
+			while (dist < 100) {
+				ex = Math.floor((Math.random() * (canvas.width - 15)) + 15);
+				ey = Math.floor((Math.random() * (canvas.height - 15)) + 15);
+				dist = Math.sqrt((Math.pow((ex - user.x), 2) + (Math.pow((ey - user.y), 2))));
+			}
+			return new Enemy(ex, ey, 0, 0, radius, color);
+		}
+
+		function Food(x, y, radius, color) {
+
+			this.x = x;
+			this.y = y;
+			this.radius = radius;
+			this.color = color;
+
+			this.update = function() {
+
+				if (user) {
+					this.ateByUser();
+				}
+				if (enemy) {
+					this.ateByEnemy();
+				}
+			};
+
+			this.ateByUser = function() {
+				let deltaX = this.x - user.x;
+				let deltaY = this.y - user.y;
+				let dist = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+
+				if (dist < user.radius) {
+					let fIndex = foods.indexOf(this);
+					foods.splice(fIndex, 1);
+					user.grow(0.25);
+				}
+			};
+
+			this.ateByEnemy = function() {
+				let deltaX = this.x - enemy.x;
+				let deltaY = this.y - enemy.y;
+				let dist = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+
+				if (dist < enemy.radius) {
+					let fIndex = foods.indexOf(this);
+					foods.splice(fIndex, 1);
+					enemy.grow(0.25);
+				}
 			};
 
 			this.draw = function() {
 				ctx.beginPath();
-				ctx.arc(x, y, radius, 0, 7, false);
-				ctx.fillStyle = color;
+				ctx.arc(this.x, this.y, this.radius, 0, 7, false);
+				ctx.fillStyle = this.color;
 				ctx.fill();
-			}
+			};
+
 		}
 
-		function createPlayer() {
-			let color = colors[(Math.floor(Math.random() * 100)) % 5];
-			let radius = 20;
-			player = new Player(x, y, radius, color);
+		function createFood() {
+			let fx = Math.floor((Math.random() * (canvas.width - 5)) + 5);
+			let fy = Math.floor((Math.random() * (canvas.height - 5)) + 5);
+			let color = foodColors[Math.floor((Math.random() * 100) % 5)];
+			let radius = 3;
+			let f = new Food(fx, fy, radius, color);
+			foods.push(f);
 		}
 
 		function render() {
-			ctx.clearRect(0, 0, mouseCanvas.width, mouseCanvas.height);
-			player.update();
-			player.draw();
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			if (user) {
+				user.draw();
+				user.update();
+			}
+			if (enemy) {
+				enemy.draw();
+				enemy.update();
+			}
+			if (foods.length !== 0) {
+				for (let i = 0; i < foods.length; i++) {
+					foods[i].draw();
+					foods[i].update();
+				}
+			}
 			animationReference = requestAnimationFrame(render);
 		}
 
+		function handleKey(e) {
+			let keyNum = e.which;
+			if (user) {
+				switch (keyNum) {
+					case 9:
+						CanvasModule.removeKeyListenerApi();
+						break;
+					case 37:
+						user.controls.left = e.type == "keydown";
+						break;
+					case 38:
+						user.controls.up = e.type == "keydown";
+						break;
+					case 39:
+						user.controls.right = e.type == "keydown";
+						break;
+					case 40:
+						user.controls.bottom = e.type == "keydown";
+						break;
+				}
+			}
+		}
+
 		function startAnimation() {
-			createPlayer();
+			user = createUser(canvas.width / 2, canvas.height / 2);
+			enemy = createEnemy();
+			players.push(user, enemy);
+			createFoodIntervalId = window.setInterval(createFood, 1000);
 			render();
+			stats.style.display = "inline-block";
 		}
 
 		function stopAnimation() {
-			ctx.clearRect(0, 0, mouseCanvas.width, mouseCanvas.height);
-			player = undefined;
-			x = mouseCanvas.width / 2;
-			y = mouseCanvas.height / 2;
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			user = undefined;
+			enemy = undefined;
+			foods = [];
+			x = canvas.width / 2;
+			y = canvas.height / 2;
 			cancelAnimationFrame(animationReference);
+			clearInterval(createFoodIntervalId);
+			stats.style.display = "none";
 		}
 
 		return {
 			resizeApi : function() {
-				x = mouseCanvas.width / 2;
-				y = mouseCanvas.height / 2;
+				x = canvas.width / 2;
+				y = canvas.height / 2;
 			},
-			mouseHandlerApi : function(ex, ey) {
-				x = ex;
-				y = ey;
+			keyApi : function(e) {
+				handleKey(e);
 			},
 			touchHandlerApi : function(ex, ey) {
 				x = ex;
@@ -441,6 +847,7 @@ function init(window, document, LoadingModule, undefined) {
 		let playgroundHeading = document.getElementById("mouse-action").getElementsByTagName("h2")[0];
 		let r1 = document.getElementById("paint");
 		let activeCanvas = "paint";
+		let listenForKeys = false;
 
 		let x, y;
 		let create = true;
@@ -486,13 +893,23 @@ function init(window, document, LoadingModule, undefined) {
 		function canvasHandler() {
 			if (r1.checked && activeCanvas !== "paint") {
 				activeCanvas = "paint";
-				CanvasModuleMinigame.stopApi();
-				CanvasModulePaint.startApi();
-			} else if (activeCanvas !== "minigame"){
+				startPaint();
+			} else if (!r1.checked && activeCanvas !== "minigame"){
 				activeCanvas = "minigame";
-				CanvasModulePaint.stopApi();
-				CanvasModuleMinigame.startApi();
+				startMinigame();
 			}
+		}
+
+		function startPaint() {
+			removeKeyListener();
+			CanvasModuleMinigame.stopApi();
+			CanvasModulePaint.startApi();
+		}
+
+		function startMinigame() {
+			addKeyListener();
+			CanvasModulePaint.stopApi();
+			CanvasModuleMinigame.startApi();
 		}
 
 		function resizeCanvas() {
@@ -507,22 +924,56 @@ function init(window, document, LoadingModule, undefined) {
 			mouseActionSec.classList.add("clicked");
 			modalWin.classList.add("visible");
 			mouseCanvas.addEventListener("mousemove", function(e) {
-				let ev = e || window.event;
 				let rect = mouseCanvas.getBoundingClientRect();
-				x = ev.clientX - rect.left;
-				y = ev.clientY - rect.top;
+				x = e.clientX - rect.left;
+				y = e.clientY - rect.top;
 				CanvasModulePaint.mouseHandlerApi(x, y);
 			});
 			mouseCanvas.addEventListener("touchmove", function(e) {
-				let ev = e || window.event;
-				ev.preventDefault();
-				let touch = ev.touches[0] || ev.changedTouches[0];
+				e.preventDefault();
+				let touch = e.touches[0] || e.changedTouches[0];
 				let rect = mouseCanvas.getBoundingClientRect();
 				x = touch.pageX - rect.left;
 				y = touch.pageY - rect.top;
 				CanvasModulePaint.touchHandlerApi(x, y);
 			});
+			addKeyListener();
 			mouseActionSec.removeEventListener("click", handleCanvasClick, false);
+		}
+
+		let keyDown = function(e) {
+			e.preventDefault();
+			CanvasModuleMinigame.keyApi(e);
+		};
+
+		let keyUp = function(e) {
+			e.preventDefault();
+			CanvasModuleMinigame.keyApi(e);
+		};
+
+		mouseCanvas.addEventListener("click", addKeyListener);
+
+		document.addEventListener("click", function (e) {
+			let target = e.target || window.target;
+			if (target !== mouseCanvas) {
+				removeKeyListener();
+			}
+		});
+
+		function addKeyListener() {
+			if (!listenForKeys) {
+				document.addEventListener("keydown", keyDown);
+				document.addEventListener("keyup", keyUp);
+				listenForKeys = true;
+			}
+		}
+
+		function removeKeyListener() {
+			if (listenForKeys) {
+				document.removeEventListener("keydown", keyDown, false);
+				document.removeEventListener("keyup", keyUp, false);
+				listenForKeys = false;
+			}
 		}
 
 		closeBtn.addEventListener("click", function () {
@@ -531,12 +982,12 @@ function init(window, document, LoadingModule, undefined) {
 
 		mouseActionSec.addEventListener("click", handleCanvasClick);
 
-		CanvasModulePaint.resizeApi();
-		CanvasModuleMinigame.resizeApi();
-
 		return {
 			resizeApi : function() {
 				resizeCanvas();
+			},
+			removeKeyListenerApi : function () {
+				removeKeyListener();
 			}
 		}
 
@@ -574,9 +1025,8 @@ function init(window, document, LoadingModule, undefined) {
 		let targetPager;
 
 		pager.addEventListener("click", function(e) {
-			let ev = e || window.event;
-			ev.preventDefault();
-			let target = ev.target || window.target;
+			e.preventDefault();
+			let target = e.target || window.target;
 			if (target.getAttribute("href") == null || target.classList.contains("active")) {
 				return;
 			}
@@ -630,19 +1080,17 @@ function init(window, document, LoadingModule, undefined) {
 		}
 
 		function handleTouchStart(e) {
-			let ev = e || window.event;
-			if (typeof(ev.touches) != "undefined") {
-				xDown = ev.touches[0].clientX;
-				yDown = ev.touches[0].clientY;
+			if (typeof(e.touches) != "undefined") {
+				xDown = e.touches[0].clientX;
+				yDown = e.touches[0].clientY;
 			} else {
-				xDown = ev.clientX;
-				yDown = ev.clientY;
+				xDown = e.clientX;
+				yDown = e.clientY;
 			}
 			firstGalleryDiv.classList.add("drag");
 		}
 
 		function handleTouchMove(e) {
-			let ev = e || window.event;
 			windowWidth = w.innerWidth || el.clientWidth || g.clientWidth;
 			let slideLimit = 25;
 			if (windowWidth > 960) {
@@ -670,7 +1118,7 @@ function init(window, document, LoadingModule, undefined) {
 
 			if (Math.abs(xDiff) > Math.abs(yDiff)) {
 				targetPager = activePager;
-				ev.preventDefault();
+				e.preventDefault();
 				if (xDiff > 0) {
 					//alert("swipe left");
 					if (xDiff > (slideLimit) && activePagerNumber != countPager) {
@@ -755,21 +1203,20 @@ function init(window, document, LoadingModule, undefined) {
 				return;
 			}
 
-			let ev = e || window.event;
-			dragElement = ev.target || window.target;
+			dragElement = e.target || window.target;
 			if (!dragElement.classList.contains("draggable")) {
 				dragElement = dragElement.parentNode;
 			}
 			if (dragElement.classList.contains("draggable")) {
-				ev.preventDefault();
-				if (typeof(ev.touches) != "undefined") {
-					xTDown = ev.touches[0].clientX;
-					yTDown = ev.touches[0].clientY;
+				e.preventDefault();
+				if (typeof(e.touches) != "undefined") {
+					xTDown = e.touches[0].clientX;
+					yTDown = e.touches[0].clientY;
 					dragElement.addEventListener("touchmove", referenceSwipeMove, false);
 					dragElement.addEventListener("touchend", referenceSwipeEnd, false);
 				} else {
-					xTDown = ev.clientX;
-					yTDown = ev.clientY;
+					xTDown = e.clientX;
+					yTDown = e.clientY;
 					reference.addEventListener("mousemove", referenceSwipeMove, false);
 					reference.addEventListener("mouseup", referenceSwipeEnd, false);
 				}
@@ -780,17 +1227,16 @@ function init(window, document, LoadingModule, undefined) {
 		}
 
 		function referenceSwipeMove(e) {
-			let ev = e || window.event;
 			if (!xTDown || !yTDown) {
 				return;
 			}
 
-			if (typeof(ev.touches) != "undefined") {
-				xTMove = xTDown - ev.touches[0].clientX;
-				yTMove = yTDown - ev.touches[0].clientY;
+			if (typeof(e.touches) != "undefined") {
+				xTMove = xTDown - e.touches[0].clientX;
+				yTMove = yTDown - e.touches[0].clientY;
 			} else {
-				xTMove = xTDown - ev.clientX;
-				yTMove = yTDown - ev.clientY;
+				xTMove = xTDown - e.clientX;
+				yTMove = yTDown - e.clientY;
 			}
 
 			let deg = (dragElement.offsetLeft / windowWidth) * 20;
@@ -801,9 +1247,8 @@ function init(window, document, LoadingModule, undefined) {
 		}
 
 		function referenceSwipeEnd(e) {
-			let ev = e || window.event;
 
-			ev.preventDefault();
+			e.preventDefault();
 
 			let otherElement;
 
@@ -906,8 +1351,7 @@ function init(window, document, LoadingModule, undefined) {
 		}
 
 		contactForm.addEventListener("focusout", function(e) {
-			let ev = e || window.event;
-			let target = ev.target || window.target;
+			let target = e.target || window.target;
 			let userInput = target.value;
 			if (userInput !== "") {
 				target.classList.add("filled");
@@ -949,7 +1393,7 @@ function init(window, document, LoadingModule, undefined) {
 				userInput = inputs[i].value;
 				if (userInput !== "") {
 					if (inputs[i].getAttribute("name") === "name") {
-						regex = new RegExp("^[a-zA-ZäÄöÖüÜß ]{3,}$");
+						regex = new RegExp("^[a-zA-ZäÄöÖüÜß ]{2,}$");
 					}
 					if (inputs[i].getAttribute("name") === "email") {
 						regex = new RegExp("^[a-zA-Z_0-9][a-zA-Z_0-9\.]+[a-zA-Z0-9][@][a-zA-Z0-9][a-zA-Z_0-9\.\-]+[a-zA-Z0-9][\.][a-zA-Z]{2,3}$");
@@ -994,8 +1438,7 @@ function init(window, document, LoadingModule, undefined) {
 
 		submitButton.addEventListener("click", function (e) {
 			if (submitButton.classList.contains("missing")) {
-				let ev = e || window.event;
-				ev.preventDefault();
+				e.preventDefault();
 				alert("Es fehlt noch mindestens eine Eingabe. Bitte vergewissern Sie sich, dass alle Eingabe-Felder einen validen Input enthalten. Unter Umständen sorgen Sonderzeichen für Probleme. Falls Sie Sonderzeichen (z.B. $, %, ´, `, \", oder ähnliches) genutzt haben, entfernen Sie diese bitte.");
 			}
 		});
@@ -1004,19 +1447,19 @@ function init(window, document, LoadingModule, undefined) {
 
 }
 
+
 let LoadingModule = (function(window, document, undefined) {
 
-	function stopAnimation() {
-		let loadingContainer = document.getElementsByClassName("loading-container")[0];
-		loadingContainer.classList.add("fade-out");
+	function stopLoadingAnimation(lc) {
+		lc.classList.add("fade-out");
 		window.setTimeout(function () {
-			loadingContainer.style.display = "none";
-		}, 1000);
+			lc.style.display = "none";
+		}, 1001);
 	}
 
 	return {
-		stopApi : function() {
-			stopAnimation();
+		stopApi : function (lc) {
+			stopLoadingAnimation(lc);
 		}
 	}
 
@@ -1026,5 +1469,5 @@ let LoadingModule = (function(window, document, undefined) {
 document.addEventListener("DOMContentLoaded", function() {
 	window.setTimeout(function() {
 		init(window, document, LoadingModule);
-	}, ((Math.random() * 3000) + 1000));
+	}, ((Math.random() * 2000) + 500));
 });

@@ -1,119 +1,178 @@
-var Module = (function(window, document, undefined) {
+// written by me
 
-	function init() {
-		
-		var w = window,
+function init() {
+
+	let Module = (function (window, document, undefined) {
+
+		let w = window,
 			d = document,
-			e = d.documentElement,
+			el = d.documentElement,
 			g = d.getElementsByTagName('body')[0];
-			
-		var scrollVar = window.pageYOffset || document.documentElement.scrollTop;
-		
-		var aboveFold = document.getElementById("above-fold");
-		var scrollDownButton = document.getElementById("content-below");
-		var backToTop = document.getElementById("back-to-top");
-		var body = document.getElementsByTagName("body")[0];
-		var nav = document.getElementById("main-nav");
-		var header = document.getElementsByClassName("header")[0];
-		var navRect = nav.getBoundingClientRect();
-		var windowHeight = window.innerHeight || e.clientHeight || g.clientHeight;
-		var navTopOffset = (navRect.top <= windowHeight) ? windowHeight : navRect.top;
-		var navHeight = nav.offsetHeight;
-		var menuButton = document.getElementsByClassName("menu-button")[0];
-		var sections = document.getElementsByTagName("section");
-		var main = document.getElementsByTagName("main")[0];
 
-		var cookieDiv = document.getElementsByClassName("cookie-div")[0];
-		
-		var cookieText = decodeURIComponent(document.cookie);
+		let scrollDownButton = document.getElementById("content-below");
+		let backToTop = document.getElementById("back-to-top");
+		let cookieDiv = document.getElementsByClassName("cookie-div")[0];
+
+		let intInnerViewportH = window.innerHeight;
+
+		let cookieText = decodeURIComponent(document.cookie);
 		if (cookieText.search("hasAlreadyVisited=true") != -1) {
 			cookieDiv.style.display = "none";
 		}
 
-		function preventDefault(e) {
-			e = e || window.event;
-			if (e.preventDefault)
-				e.preventDefault();
-			e.returnValue = false;  
-		}
-		
-		scrollDownButton.addEventListener("click", function() {
-			var intInnerViewportH = window.innerHeight;
+		cookieDiv.getElementsByClassName("got-it")[0].addEventListener("click", function () {
+			cookieDiv.style.display = "none";
+			let now = new Date();
+			let time = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 30);
+			document.cookie = "hasAlreadyVisited=true; expires=" + time.toGMTString() + ";";
+		});
+
+		scrollDownButton.addEventListener("click", function () {
+			intInnerViewportH = window.innerHeight;
 			window.scroll({
 				top: intInnerViewportH,
 				left: 0,
 				behavior: "smooth"
 			});
 		});
-		
-		document.addEventListener("scroll", function() {
-			windowWidth = w.innerWidth || e.clientWidth || g.clientWidth;
-			var intInnerViewportH = window.innerHeight;
-			scrollVar = window.pageYOffset || document.documentElement.scrollTop;
-			if (scrollVar < (scrollVar - sections[0].getBoundingClientRect().top)) {
-				for (i = 0; i < sections.length; i++) {
-					var sectionRect = sections[i].getBoundingClientRect();
-					var sectionTopOffset = scrollVar + sectionRect.top - 100;
-					if (scrollVar > sectionTopOffset - (intInnerViewportH - 300)) {
-						var h2 = sections[i].getElementsByTagName("h2")[0];
-						//h2.classList.add("in-view");
-						sections[i].classList.add("in-view");
-					}
-				}
-			}
-			if (windowWidth > 960) {
-				scrollVar = window.pageYOffset || document.documentElement.scrollTop;
-				if (scrollVar >= navTopOffset) {
-					nav.classList.add("scroll-nav");
-					aboveFold.style.marginBottom = navHeight + "px";
-				} else {
-					nav.classList.remove("scroll-nav");
-					aboveFold.style.marginBottom = "0";
-				}
-			}  
-		});
-		
-		menuButton.addEventListener("click", function() {
-			menuButton.classList.toggle("open");
-			body.classList.toggle("open");
-			nav.classList.toggle("open");
-			header.classList.toggle("open");
-			aboveFold.classList.toggle("away");
-			if (menuButton.classList.contains("open")) {
-				window.setTimeout(function () {
-					aboveFold.style.display = "none";
-					main.style.display = "none";
-				}, 800);
-			} else {
-				window.setTimeout(function() {
-					aboveFold.style.display = "block";
-					main.style.display = "block";
-				}, 800);
-			}
-		});
-		
-		window.addEventListener("resize", function() {
-			navRect = nav.getBoundingClientRect();
-			navTopOffset = window.innerHeight || e.clientHeight || g.clientHeight;
-			navHeight = nav.offsetHeight;
-			windowWidth = w.innerWidth || e.clientWidth || g.clientWidth;
-		});
-		
-		backToTop.addEventListener("click", function() {
+
+		backToTop.addEventListener("click", function () {
 			window.scroll({top: 0, left: 0, behavior: "smooth"});
 		});
-		
-		cookieDiv.getElementsByClassName("got-it")[0].addEventListener("click", function() {
-			cookieDiv.style.display="none";
-			var now = new Date();
-			var time = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 30);
-			document.cookie = "hasAlreadyVisited=true; expires=" + time.toGMTString() + ";";
-		});
-		
-	}
-	
-	document.addEventListener("DOMContentLoaded", function() {
-		init();
-	});
 
-})(window, document)
+		window.addEventListener("resize", function () {
+			NavModule.resizeApi();
+		});
+
+	})(window, document);
+
+
+
+
+	let NavModule = (function(window, document, undefined) {
+
+		let w = window,
+			d = document,
+			el = d.documentElement,
+			g = d.getElementsByTagName('body')[0];
+
+		let wrapper = document.getElementsByClassName("wrapper")[0];
+		let aboveFold = document.getElementById("above-fold");
+		let nav = document.getElementById("main-nav");
+		let header = document.getElementsByClassName("header")[0];
+		let menuButton = document.getElementsByClassName("menu-button")[0];
+		let lis = nav.getElementsByTagName("li");
+		let sections = document.getElementsByTagName("section");
+
+		let scrollVar = document.scrollTop;
+		let navRect = nav.getBoundingClientRect();
+		let windowHeight = window.innerHeight || el.clientHeight || g.clientHeight;
+		let windowWidth = w.innerWidth || el.clientWidth || g.clientWidth;
+		let navTopOffset = (navRect.top <= windowHeight) ? windowHeight : navRect.top;
+		let navHeight = nav.offsetHeight;
+
+		function scrollFunc() {
+			windowWidth = w.innerWidth || el.clientWidth || g.clientWidth;
+			let intInnerViewportH = window.innerHeight;
+			scrollVar = wrapper.scrollTop;
+			for (let i = 0; i < lis.length; i++) {
+				lis[i].classList.remove("view");
+			}
+			menuButton.classList.remove("white");
+			nav.classList.remove("bright");
+			if (scrollVar < (scrollVar - sections[0].getBoundingClientRect().top)) {
+				for (let i = 0; i < sections.length; i++) {
+					sections[i].classList.remove("in-view");
+					let sectionRect = sections[i].getBoundingClientRect();
+					let sectionTopOffset = scrollVar + sectionRect.top - 100;
+					if (scrollVar > sectionTopOffset - (intInnerViewportH - 300)) {
+						sections[i].classList.add("in-view");
+					}
+					if (scrollVar > sectionTopOffset) {
+						if (nav.querySelector('a[href="#' + sections[i].id + '"]') != null) {
+							var li = nav.querySelector('a[href="#' + sections[i].id + '"]').parentNode;
+						}
+					}
+				}
+				//li.classList.add("view");
+			}
+			navHeight = nav.offsetHeight;
+			if (windowWidth >= 960) {
+				scrollVar = wrapper.scrollTop;
+				if (scrollVar >= navTopOffset) {
+					header.classList.add("scroll-nav");
+				} else {
+					header.classList.remove("scroll-nav");
+				}
+			}
+		}
+
+		wrapper.addEventListener("scroll", scrollFunc);
+
+		nav.addEventListener("click", function(e) {
+			//e.preventDefault();
+			let target = e.target || window.target;
+			windowWidth = w.innerWidth || el.clientWidth || g.clientWidth;
+			let scrollVar = wrapper.scrollTop;
+			if (target.getAttribute("href") == null) {
+				return;
+			}
+			let hrefAttribute = target.getAttribute("href").replace("#", "");
+			let scrollTarget = document.getElementById(hrefAttribute);
+			if (scrollTarget === undefined) {
+				return;
+			}
+			let elementRect = scrollTarget.getBoundingClientRect();
+			let elementRelativeOffset = elementRect.top;
+			let elementTopOffset = scrollVar + elementRelativeOffset;
+			if (windowWidth < 960) {
+				window.setTimeout(function() {wrapper.scroll({top: elementTopOffset, left: 0, behavior: "smooth"})}, 500);
+			} else {
+				wrapper.scroll({top: elementTopOffset, left: 0, behavior: "smooth"});
+			}
+			menuButton.classList.remove("open");
+			nav.classList.remove("open");
+			header.classList.remove("open");
+			aboveFold.classList.remove("away");
+		});
+
+		menuButton.addEventListener("click", function() {
+			menuButton.classList.toggle("open");
+			header.classList.toggle("open");
+		});
+
+		function checkNav() {
+			let windowWidth = w.innerWidth || el.clientWidth || g.clientWidth;
+			if (windowWidth >= 960) {
+				wrapper.insertBefore(header, wrapper.firstChild.nextSibling.nextSibling);
+			} else {
+				g.insertBefore(header, g.firstChild);
+			}
+		}
+
+		checkNav();
+
+		function resizeNav() {
+			navRect = nav.getBoundingClientRect();
+			navTopOffset = window.innerHeight || el.clientHeight || g.clientHeight;
+			navHeight = nav.offsetHeight;
+			let newWindowWidth = w.innerWidth || el.clientWidth || g.clientWidth;
+			if (windowWidth !== newWindowWidth) {
+				windowWidth = newWindowWidth;
+			}
+			checkNav();
+		}
+
+		return {
+			resizeApi : function() {
+				resizeNav();
+			}
+		}
+
+	})(window, document);
+
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+	init();
+});

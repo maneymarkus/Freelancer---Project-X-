@@ -5,19 +5,19 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 		<meta name="keywords" content="webdesign, website, freelancer, berlin, berlin webdesign, berlin website, seo, html, css, javascript, php, hosting, ">
 		<meta name="descritpion" content="" />
-	  
+
 		<title>Webdesign by Markus Städler</title>
-	  
+
 		<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
 		<link rel="canonical" href="http://weberlin-design.de">
-		
+
 		<link rel="stylesheet" href="style/normalize.css" type="text/css" />
 		<link rel="stylesheet" href="style/general-style.css" type="text/css" />
 		<link rel="stylesheet" href="style/index-style.css" type="text/css" />
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" />
-		
+
 		<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
-		
+
 		<script src="script/indexScript.js" type="application/javascript" defer></script>
 		<!-- Global site tag (gtag.js) - Google Analytics -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-117686882-1"></script>
@@ -44,11 +44,11 @@
 		<!--[if lt IE 9]>
 			<script src="../script/html5shiv.js"></script>
 		<![endif]-->
-		
+
 		<!--
-		
+
 			Webdesign by Markus Städler, markus.staedler@hotmail.de
-		
+
 		-->
 
 	</head>
@@ -72,7 +72,6 @@
 					</div>
 
 					<ul>
-
 						<li>
 							<a href="#qualities">Ansprüche</a>
 						</li><!--
@@ -94,7 +93,6 @@
 						 --><li>
 						<a href="#contact">Kontakt</a>
 					</li>
-
 					</ul>
 
 				</div>
@@ -105,21 +103,23 @@
 
 		<div class="playground-overlay hide">
 			<div class="modal-window">
-				<p>Dies ist der "Playground".</p>
 				<div class="close">
 					<span class="bars">
 						<span class="bar"></span>
 						<span class="bar"></span>
 					</span>
 				</div>
+				<p>Dies ist der "Playground". Hier kann ich meiner Fantasie mal freien Lauf lassen. Die Ergebnisse, die du hier betrachten kannst, sollen einfach nur ein paar Beispiele sein, was man (oder besser ich) mit einem Canvas alles machen kann.</p>
+                <p>Das Minispiel kann man zur Zeit noch nur mit den Richtungstasten einer Tastatur spielen. Beim Minispiel geht es darum, möglichst viele Punkte einzusammeln und den gegnerischen Spieler zu "vertilgen". Und sich natürlich nicht vom Gegner fressen lassen ;).</p>
 			</div>
 		</div>
 
 		<div class="wrapper hide">
 
 			<div id="above-fold">
-				<h1>Heading</h1>
+				<h1>Webdesign aus Berlin.</h1>
 				<div class="cool"></div>
+				<p>Jung, erfrischend, verspielt, aber trotzdem professionell und funktional.</p>
 				<a id="content-below">
 					<i class="fas fa-angle-down fa-9x" aria-hidden="true"></i>
 				</a>
@@ -187,6 +187,7 @@
 
 					<div class="playground">
 						<canvas id="mouse-canvas" height="500px"></canvas>
+						<span id="stats">0</span>
 					</div>
 
 					<div class="switch">
@@ -196,7 +197,7 @@
 							<span class="checkmark"></span>
 						</label>
 						<label for="minigame">
-							Minigame
+							Minispiel
 							<input id="minigame" type="radio" name="canvas-content" value="minigame" />
 							<span class="checkmark"></span>
 						</label>
@@ -306,7 +307,9 @@
 
 					<div class="p-group">
 						<div class="p-layer p-layer-back">
-							<h3>Background</h3>
+							<h3>Hintergrund<span class="weak">-Infos</span></h3>
+							<p>Wer bin ich eigentlich wirklich und was mache ich eigentlich noch/nebenbei?</p>
+							<p>Ich bin Markus, inzwischen 21 Jahre alt und noch nicht ganz im Arbeitsleben angekommen. Zur Zeit studiere ich noch Wirtschaftsinformatik im aktuell 5. Semester an der TU Berlin. Nebenbei bin ich Seminarbetreuer der Steinbeis-SMI und arbeite vorrangig am Wochenende.</p>
 						</div>
 						<!--<div class="p-layer p-layer-front">
 							<h3>Foreground</h3>
@@ -412,7 +415,7 @@
 										<div>
 											<input id="name" name="name" type="text"/>
 											<label class="label" for="name">Name</label>
-											<div class="error">Dein Name sollte eigentlich mindestens drei Buchstaben enthalten und darf aus folgenden Zeichen bestehen: a-z, A-Z, Umlaute (z.B. ä) und ß</div>
+											<div class="error">Dein Name sollte eigentlich mindestens zwei Buchstaben enthalten und darf aus folgenden Zeichen bestehen: a-z, A-Z, Umlaute (z.B. ä) und ß</div>
 											<div class="limiter">
 												<svg class="effect" width="300%" height="100%" viewBox="0 0 1200 60" preserveAspectRatio="none">
 													<path d="M0,56.5c0,0,298.666,0,399.333,0C448.336,56.5,513.994,46,597,46c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0"></path>
@@ -460,31 +463,31 @@
 
 				</section>
 
-				<footer>
+            </main>
 
-					<a class="footer-stuff" href="impressum.html">Impressum</a>
-					<span class="break">&middot;</span>
-					<a class="footer-stuff" href="data-privacy-statement.html">Datenschutzerklärung</a>
+            <footer>
 
-					<br/>
+                <a class="footer-stuff" href="impressum.html">Impressum</a>
+                <span class="break">&middot;</span>
+                <a class="footer-stuff" href="data-privacy-statement.html">Datenschutzerklärung</a>
 
-					<div>
-						<div class="social-container">
-							<a class="social" target="_blank" href="https://twitter.com/WeberlinDesign?lang=de"><i class="fab fa-twitter"></i></a>
-							<a class="social" target="_blank" href="http://plus.google.com"><i class="fab fa-google-plus"></i></a>
-							<a class="social" target="_blank" href="http://www.facebook.com"><i class="fab fa-facebook"></i></a>
-						</div>
-						<div class="social-container">
-							<a class="social" target="_blank" href="http://www.instagram.com/weberlin.design"><i class="fab fa-instagram"></i></a>
-							<a class="social" target="_blank" href="https://www.linkedin.com/in/markus-städler-4900b5161"><i class="fab fa-linkedin"></i></a>
-							<a class="social" target="_blank" href="https://www.xing.com/profile/Markus_Staedler5"><i class="fab fa-xing"></i></a>
-						</div>
-					</div>
+                <br/>
 
-					<p>&copy; 2019 Markus Städler</p>
-				</footer>
+                <div>
+                    <div class="social-container">
+                        <a class="social" target="_blank" href="https://twitter.com/WeberlinDesign?lang=de"><i class="fab fa-twitter"></i></a>
+                        <a class="social" target="_blank" href="http://plus.google.com"><i class="fab fa-google-plus"></i></a>
+                        <a class="social" target="_blank" href="http://www.facebook.com"><i class="fab fa-facebook"></i></a>
+                    </div>
+                    <div class="social-container">
+                        <a class="social" target="_blank" href="http://www.instagram.com/weberlin.design"><i class="fab fa-instagram"></i></a>
+                        <a class="social" target="_blank" href="https://www.linkedin.com/in/markus-städler-4900b5161"><i class="fab fa-linkedin"></i></a>
+                        <a class="social" target="_blank" href="https://www.xing.com/profile/Markus_Staedler5"><i class="fab fa-xing"></i></a>
+                    </div>
+                </div>
 
-			</main>
+                <p>&copy; 2019 Markus Städler</p>
+            </footer>
 
 		</div>
 
